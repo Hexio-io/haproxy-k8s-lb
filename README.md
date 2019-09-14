@@ -76,7 +76,7 @@ metadata:
   name: my-lb-service
 spec:
   type: LoadBalancer
-	loadBalancerIP: 1.2.3.4
+  loadBalancerIP: 1.2.3.4
   ports:
   - port: 80
     protocol: TCP
@@ -107,12 +107,12 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-	haproxy-lb.hexio.io/loadBalancer: "true"
-	haproxy-lb.hexio.io/loadBalancerBindIP": "10.0.0.42"
+    haproxy-lb.hexio.io/loadBalancer: "true"
+    haproxy-lb.hexio.io/loadBalancerBindIP": "10.0.0.42"
   name: my-lb-service
 spec:
   type: LoadBalancer
-	loadBalancerIP: 1.2.3.4
+  loadBalancerIP: 1.2.3.4
   ports:
   - port: 80
     protocol: TCP
