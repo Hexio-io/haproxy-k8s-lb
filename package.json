@@ -1,0 +1,25 @@
+{
+  "name": "haproxy-k8s-lb",
+  "version": "1.0.0",
+  "description": "HA Proxy as a Kubernetes External Load Balancer",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.js",
+    "start-dev": "npm run build && HAPROXY_CONFIG=./temp/haproxy.cfg node ./dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jiri Hybek, Hexio a.s. <jiri.hybek@hexio.io>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "handlebars": "^4.2.0",
+    "meta2-logger": "^2.1.0",
+    "request": "2.83.0"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.18",
+    "@types/request": "^2.47.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.1.6"
+  }
+}

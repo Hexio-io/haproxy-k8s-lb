@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: haproxy-k8s-external-lb
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - 'nodes'
+  - 'services'
+  verbs:
+  - get
+  - list
+  - patch

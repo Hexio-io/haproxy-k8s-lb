@@ -1,0 +1,31 @@
+image: harbor.hexio.dev/infrastructure/agri:v1.0.40
+
+services:
+  - docker:dind
+
+stages:
+  - build
+
+variables:
+  CONTAINER_IMAGE: ${CI_REGISTRY}/${CI_REGISTRY_NS}/${CI_IMAGE_NAME}:${CI_COMMIT_REF_NAME}
+  CONTAINER_IMAGE_LATEST: ${CI_REGISTRY}/${CI_REGISTRY_NS}/${CI_IMAGE_NAME}:latest
+  DOCKER_DRIVER: overlay2
+  
+build:
+  stage: build
+  only:
+    # Tag: v* (eg. v1.x|v2.x)
+    - /^v.*$/
+  script:
+    # Login to the registry
+    - echo -n "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    # Pull latest image to server as a cache
+    - "docker pull ${CONTAINER_IMAGE_LATEST} || true"
+    # Check and fail if an image with current tag already exists
+    - "echo ${CONTAINER_IMAGE}"
+    - "! docker pull ${CONTAINER_IMAGE}"
+    # Build
+    - "docker build -t ${CONTAINER_IMAGE} -t ${CONTAINER_IMAGE_LATEST} ."
+    # Push
+    - "docker push ${CONTAINER_IMAGE}"
+    - "docker push ${CONTAINER_IMAGE_LATEST}"
