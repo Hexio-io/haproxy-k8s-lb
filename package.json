@@ -17,7 +17,7 @@
     "request": "2.88.0"
   },
   "devDependencies": {
-    "@types/node": "7.0.18",
+    "@types/node": "12.7.5",
     "@types/request": "2.48.3",
     "tslint": "5.20.0",
     "typescript": "3.6.3"
