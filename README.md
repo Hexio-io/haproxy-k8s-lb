@@ -122,6 +122,22 @@ spec:
   sessionAffinity: None
 ```
 
+### Reload Signal
+
+Sometimes it's necessary to force reload in a reaction of some event, such as when keepalived changes addresses. For this purpose, you can send a signal to the controller to reload the configuration and HA Proxy.
+
+**Send signal to local process:**
+
+```bash
+kill -SIGUSR1 <pid>
+```
+
+**Send signal to Docker container:**
+
+```bash
+docker kill --signal=USR1 <container>
+```
+
 ## Development
 
 The controller is written in a TypeScript for a Node.JS runtime.
