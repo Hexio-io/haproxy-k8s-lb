@@ -515,7 +515,7 @@ async function main() {
 	// Bind signal handler for reload
 	process.on("SIGUSR1", () => {
 
-		this.logger.debug("Catched SIGUSR1 signal, will update.");
+		logger.debug("Catched SIGUSR1 signal, will update.");
 		updateConfig(true).catch((err) => logger.error("Failed to execute update function:", err));
 
 	});
