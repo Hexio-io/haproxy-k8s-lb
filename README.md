@@ -1,24 +1,24 @@
 # haproxy-k8s-lb
 
-External LoadBalancer for Kubernetes.
+**External LoadBalancer for Kubernetes.**
 
-This container consists of a HA Proxy and a controller. Controller pools Kubernetes services in regular intervals and automatically updates a HA Proxy configuration.
+This container consists of a HA Proxy and a controller. Controller pools Kubernetes services in regular intervals and automatically updates the HA Proxy configuration.
 
 This container is ment to run OUTSIDE of Kubernetes cluster and it's purpose is to provide an external LBaaS when no cloud provider is available (or not wanted).
 
 Of course you can use MetalLB but when you have no access to L2 network or BGP is not applicable this is a good alternative.
 
-**IMPORTANT: It's necessary to run a container in a host network in order to HA Proxy to be able to bind IP addresses.**
+**IMPORTANT: It's necessary to run a container in a host network mode in order to HA Proxy to be able to bind IP addresses.**
 
 Also, you can open ports using classic Docker way but then bind IPs in k8s services must be set to `127.0.0.1` or `*`.
 
 **NOTE:** The controller also updates the k8s service status so the service will not remain in a `<pending>` state and the specified `loadBalancerIP` will be available as a service `External IP`.
 
-## Prerequisities
+## Prerequisites
 
-You must setup a service account in your k8s cluster that has access to `services` and `nodes` resources. The `service` resources must be writable.
+You must setup a service account in your k8s cluster that has access to `services` (rw), `services/status` (rw) and `nodes` (r) resources.
 
-You can find sample manifests in a `deployment` directory.
+You can find example manifests in a `deployment` directory.
 
 ## Run
 
@@ -62,7 +62,7 @@ HAPROXY_PROMETHEUS_BIND_PORT="3000"
 
 ## Usage
 
-You can create a standard k8s services of a `LoadBalancer` type and you MUST add the following annotation:
+You can create a standard Kubernetes service of the `LoadBalancer` type plus you MUST set the following annotation:
 
 ```
 "haproxy-lb.hexio.io/loadBalancer": true
@@ -91,7 +91,7 @@ spec:
 
 ### Bind IP
 
-When your Load balancer is not able to bind directly to the `loadBalancerIP`, eg. it is behind the NAT you can add the following annotation to specify real bind IP address for a HA Proxy:
+When your Load balancer is not able to bind directly to the `loadBalancerIP`, eg. it's behind a NAT you can add the following annotation to specify real bind IP address for the HA Proxy:
 
 ```
 "haproxy-lb.hexio.io/loadBalancerBindIP": "10.0.0.42"
@@ -127,7 +127,7 @@ spec:
 
 ### Reload Signal
 
-Sometimes it's necessary to force reload in a reaction of some event, such as when keepalived changes addresses. For this purpose, you can send a signal to the controller to reload the configuration and HA Proxy.
+Sometimes it's necessary to force reload in a reaction of some event. For this purpose, you can send a signal to the controller to reload the configuration and HA Proxy.
 
 **Send signal to local process:**
 
@@ -149,15 +149,15 @@ When Prometheus is enabled in the configuration then a web server will be availa
 
 In the `ansible` directory you can find a role for the deployment of the Load Balancer with keepalived. It has it's own README.
 
-[Deploy using Ansible](./ansible)
+[Deploy HA Proxy K8S LB using Ansible](./ansible)
 
 ## Development
 
-The controller is written in a TypeScript for a Node.JS runtime.
+The controller is written in TypeScript for the Node.JS runtime.
 
 **Note that if you don't have HA proxy installed on your system the config update process will be failing because the HA Proxy binary won't be found.**
 
-Running application outside of a Docker is good for a Kubernetes API testing. For full dev & tests it's recommended to run app in a Docker.
+Running application outside of a Docker is good for a Kubernetes API testing. For full dev & tests, it's recommended to run the app in a Docker.
 
 ```bash
 # Prepare temp directory for sample output HA Proxy config
