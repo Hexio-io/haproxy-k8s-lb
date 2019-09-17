@@ -344,7 +344,7 @@ async function main() {
 	let lastConfig = null;
 	let updating = false;
 
-	const updateConfig = async () => {
+	const updateConfig = async (forceReload: boolean = false) => {
 
 		try {
 
@@ -472,7 +472,7 @@ async function main() {
 			logger.debug("New config:", newConfig);
 
 			// Compare to previous one and skip if there are no changes
-			if (lastConfig === newConfig) {
+			if (!forceReload && lastConfig === newConfig) {
 
 				logger.debug("Config did not change.");
 				updating = false;
@@ -516,7 +516,7 @@ async function main() {
 	process.on("SIGUSR1", () => {
 
 		this.logger.debug("Catched SIGUSR1 signal, will update.");
-		updateConfig().catch((err) => logger.error("Failed to execute update function:", err));
+		updateConfig(true).catch((err) => logger.error("Failed to execute update function:", err));
 
 	});
 
