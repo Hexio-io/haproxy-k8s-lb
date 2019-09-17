@@ -278,6 +278,8 @@ function updateServiceStatus(config: IKubeConfig, service: IKubeServiceItem, tim
 			if (err)
 				return reject(err);
 
+			logger.debug("Update status response:", body);
+
 			resolve(body);
 
 		});
