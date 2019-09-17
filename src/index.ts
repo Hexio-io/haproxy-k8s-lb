@@ -324,6 +324,9 @@ async function main() {
 		timeoutServer: process.env["HAPROXY_TIMEOUT_SERVER"] || "1m",
 		timeoutHttpKeepAlive: process.env["HAPROXY_TIMEOUT_HTTP_KEEP_ALIVE"] || "10s",
 		timeoutCheck: process.env["HAPROXY_TIMEOUT_CHECK"] || "10s",
+		prometheusEnable: process.env["HAPROXY_PROMETHEUS_ENABLE"] === "true" ? true : false,
+		prometheusBindAddress: process.env["HAPROXY_PROMETHEUS_BIND_ADDRESS"] || "127.0.0.1",
+		prometheusBindPort: process.env["HAPROXY_PROMETHEUS_BIND_PORT"] || 3000
 	};
 
 	// Get interval
