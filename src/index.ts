@@ -512,6 +512,14 @@ async function main() {
 
 	}, updateInterval);
 
+	// Bind signal handler for reload
+	process.on("SIGUSR1", () => {
+
+		this.logger.debug("Catched SIGUSR1 signal, will update.");
+		updateConfig().catch((err) => logger.error("Failed to execute update function:", err));
+
+	});
+
 	// Do first load immediately
 	updateConfig().catch((err) => logger.error("Failed to execute update function:", err));
 
