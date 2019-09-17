@@ -22,11 +22,11 @@ sudo pip install docker
 
 It's recommended to configure the following values as a `group_vars` for your LB hosts group.
 
-All LB controller and HA Proxy options are the same as Docker image arguments (see project's root README).
+All LB controller and HA Proxy options are the same as Docker image arguments (see [project's root README](../)).
 
 ```yaml
 # Load Balancer Controller
-lb_image: "harbor.hexio.dev/infrastructure/haproxy-k8s-lb:v1.0.7"
+lb_image: "<docker image url>"
 lb_log_level: warn # debug|info|warn|...
 lb_update_interval: 60 # in seconds
 

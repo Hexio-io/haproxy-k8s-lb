@@ -138,14 +138,24 @@ kill -SIGUSR1 <pid>
 **Send signal to Docker container:**
 
 ```bash
-docker kill --signal=USR1 <container>
+docker exec <container> /bin/bash -c 'kill -SIGUSR1 $(ps aux | grep -m1 "node ./dist/index.js" | awk "{print \$1}")'
 ```
+
+## Prometheus
+
+When Prometheus is enabled in the configuration then a web server will be available on a specified bind address and port. By default (when enabled) metrics will be available at [http://127.0.0.1:3000/metrics](http://127.0.0.1:3000/metrics).
+
+## Ansible Deployment
+
+In the `ansible` directory you can find a role for the deployment of the Load Balancer with keepalived. It has it's own README.
+
+[Deploy using Ansible](./ansible)
 
 ## Development
 
 The controller is written in a TypeScript for a Node.JS runtime.
 
-**Note that if you don't have HA proxy installed on your system the config update process will be failing because HA Proxy binary won't be found.**
+**Note that if you don't have HA proxy installed on your system the config update process will be failing because the HA Proxy binary won't be found.**
 
 Running application outside of a Docker is good for a Kubernetes API testing. For full dev & tests it's recommended to run app in a Docker.
 
@@ -173,16 +183,6 @@ npm run start-dev
 # Build Docker container
 docker build -t <image_tag> .
 ```
-
-## Prometheus
-
-When Prometheus is enabled in the configuration then a web server will be available on a specified bind address and port. By default (when enabled) metrics will be available at [http://127.0.0.1:3000/metrics](http://127.0.0.1:3000/metrics).
-
-## Ansible Deployment
-
-In the `ansible` directory there is a role for the deployment of the Load Balancer with keepalived. It has it's own README.
-
-[Deploy using Ansible](./ansible)
 
 ## License
 
