@@ -22,7 +22,7 @@ sudo pip install docker
 
 It's recommended to configure the following values as a `group_vars` for your LB hosts group.
 
-All LB controller and HA Proxy options are the same as Docker image arguments (see [project's root README](../)).
+All LB controller and HA Proxy options are the same as Docker image arguments (see project's root README).
 
 ```yaml
 # Load Balancer Controller
