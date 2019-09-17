@@ -1,0 +1,27 @@
+{% for name, instance in lb_keepalived_instances.items() %}
+vrrp_instance {{ name }} {
+    state {{ instance.state }}
+    # nopreempt
+    garp_master_delay {{ lb_keepalived_garp_master_delay }}
+    garp_master_repeat {{ lb_keepalived_garp_master_repeat }}
+    garp_master_refresh {{ lb_keepalived_garp_master_refresh }}
+    dont_track_primary
+    interface {{ instance.interface }}
+    virtual_router_id {{ instance.virtual_router_id }}
+    priority {{ instance.priority }}
+    advert_int {{ lb_keepalived_advert_int }}
+    authentication {
+        auth_type PASS
+        auth_pass {{ lb_keepalived_auth_pass }}
+    }
+    virtual_ipaddress {
+	{% for address, block in lb_floating_ips.items() %}{% if block == name %}
+
+        {{ address }}
+{% endif %}{% endfor %}
+    }
+
+    {% if lb_keepalived_notify_proxy %}notify /usr/local/bin/lb_keepalived_notify.sh{% endif %}
+
+}
+{% endfor %}

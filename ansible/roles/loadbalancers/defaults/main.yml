@@ -1,0 +1,62 @@
+# Copyright 2019 Hexio a.s. (https://hexio.io)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+lb_image: "harbor.hexio.dev/infrastructure/haproxy-k8s-lb:v1.0.7"
+lb_log_level: warn
+lb_update_interval: 60
+lb_kubeapi:
+  server:
+  ca:
+  service_token:
+  namespace: default
+lb_haproxy_global_max_conn: 16000
+lb_haproxy_global_spread_checks: 4
+lb_haproxy_global_tune_max_rewrite: 1024
+lb_haproxy_global_tune_buffer_size: 32768
+lb_haproxy_default_max_conn: 8000
+lb_haproxy_default_retries: 3
+lb_haproxy_default_timeout_http_request: 10s
+lb_haproxy_default_timeout_queue: 1m
+lb_haproxy_default_timeout_connect: 10s
+lb_haproxy_default_timeout_client: 1m
+lb_haproxy_default_timeout_server: 1m
+lb_haproxy_default_timeout_http_keep_alive: 10s
+lb_haproxy_default_timeout_check: 10s
+lb_haproxy_prometheus_enable: false
+lb_haproxy_prometheus_bind_address: "127.0.0.1"
+lb_haproxy_prometheus_bind_port: 3000
+
+lb_keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+lb_keepalived_garp_master_delay: 5
+lb_keepalived_garp_master_repeat: 3
+lb_keepalived_garp_master_refresh: 1
+lb_keepalived_advert_int: 1
+lb_keepalived_auth_pass: password
+
+lb_keepalived_notify_proxy: false
+lb_keepalived_bind_on_non_local: false
+
+lb_keepalived_instances: []
+# lb_keepalived_instances:
+#   default:
+#     virtual_router_id: 60
+#     priority: 103
+#     interface: ens3
+#     state: BACKUP
+
+lb_floating_ips: []
+
+# Mapping of IP -> instance
+# lb_floating_ips:
+#   - "1.2.3.4": default

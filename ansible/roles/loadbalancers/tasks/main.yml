@@ -1,0 +1,75 @@
+# Copyright 2019 Hexio a.s. (https://hexio.io)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Allow bind on non local addresses
+  sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: "1"
+    sysctl_set: yes
+    state: present
+  when: lb_keepalived_bind_on_non_local | bool
+
+- name: Running the container
+  docker_container:
+    name: "haproxy-k8s-lb"
+    image: "{{lb_image}}"
+    network_mode: host
+    restart_policy: "always"
+    state: started
+    env:
+      # Controller config
+      LOG_LEVEL: "{{lb_log_level}}"
+      UPDATE_INTERVAL: "{{lb_update_interval}}"
+
+      # Kubernetes API
+      KUBE_SERVER: "{{lb_kubeapi.server}}"
+      KUBE_SERVER_CA: "{{lb_kubeapi.ca}}"
+      KUBE_SERVICE_TOKEN: "{{lb_kubeapi.service_token}}"
+      KUBE_NAMESPACE: "{{lb_kubeapi.namespace}}"
+
+      # HA Proxy Config
+      HAPROXY_GLOBAL_MAX_CONN: "{{lb_haproxy_global_max_conn}}"
+      HAPROXY_GLOBAL_SPREAD_CHECKS: "{{lb_haproxy_global_spread_checks}}"
+      HAPROXY_GLOBAL_TUNE_MAX_REWRITE: "{{lb_haproxy_global_tune_max_rewrite}}"
+      HAPROXY_GLOBAL_TUNE_BUFFER_SIZE: "{{lb_haproxy_global_tune_buffer_size}}"
+      HAPROXY_MAX_CONN: "{{lb_haproxy_default_max_conn}}"
+      HAPROXY_RETRIES: "{{lb_haproxy_default_retries}}"
+      HAPROXY_TIMEOUT_HTTP_REQUEST: "{{lb_haproxy_default_timeout_http_request}}"
+      HAPROXY_TIMEOUT_QUEUE: "{{lb_haproxy_default_timeout_queue}}"
+      HAPROXY_TIMEOUT_CONNECT: "{{lb_haproxy_default_timeout_connect}}"
+      HAPROXY_TIMEOUT_CLIENT: "{{lb_haproxy_default_timeout_client}}"
+      HAPROXY_TIMEOUT_SERVER: "{{lb_haproxy_default_timeout_server}}"
+      HAPROXY_TIMEOUT_HTTP_KEEP_ALIVE: "{{lb_haproxy_default_timeout_http_keep_alive}}"
+      HAPROXY_TIMEOUT_CHECK: "{{lb_haproxy_default_timeout_check}}"
+      HAPROXY_PROMETHEUS_ENABLE: "{{lb_haproxy_prometheus_enable}}"
+      HAPROXY_PROMETHEUS_BIND_ADDRESS: "{{lb_haproxy_prometheus_bind_address}}"
+      HAPROXY_PROMETHEUS_BIND_PORT: "{{lb_haproxy_prometheus_bind_port}}"
+
+- name: Install keepalived
+  package:
+    name: keepalived
+    state: present
+
+- name: Set keepalived notification script
+  copy:
+    src: lb_keepalived_notify.sh
+    dest: /usr/local/bin/lb_keepalived_notify.sh
+    mode: "ugo+x"
+
+- name: Configure keepalived
+  template:
+    src: keepalived.conf.j2
+    dest: "{{ lb_keepalived_config_file_path }}"
+  notify:
+    - restart keepalived

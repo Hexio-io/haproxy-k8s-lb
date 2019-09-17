@@ -174,6 +174,16 @@ npm run start-dev
 docker build -t <image_tag> .
 ```
 
+## Prometheus
+
+When Prometheus is enabled in the configuration then a web server will be available on a specified bind address and port. By default (when enabled) metrics will be available at [http://127.0.0.1:3000/metrics](http://127.0.0.1:3000/metrics).
+
+## Ansible Deployment
+
+In the `ansible` directory there is a role for the deployment of the Load Balancer with keepalived. It has it's own README.
+
+[Deploy using Ansible](./ansible)
+
 ## License
 
 Copyright 2019 Hexio a.s. <contact@hexio.io> [https://hexio.io/](https://hexio.io/).
