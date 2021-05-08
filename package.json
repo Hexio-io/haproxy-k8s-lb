@@ -12,7 +12,7 @@
   "author": "Jiri Hybek, Hexio a.s. <jiri.hybek@hexio.io>",
   "license": "Apache-2.0",
   "dependencies": {
-    "handlebars": "4.2.0",
+    "handlebars": "4.7.7",
     "meta2-logger": "2.1.0",
     "request": "2.88.0"
   },
